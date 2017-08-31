@@ -52,13 +52,16 @@ public:
 
   double lower_threshold_ ;
   double upper_threshold_ ;
+  int laser_max_range_;
 
   bool configure()
   {
     lower_threshold_ = 0.0;
     upper_threshold_ = 100000.0;
+    laser_max_range_ = 5;
     getParam("lower_threshold", lower_threshold_);
     getParam("upper_threshold", upper_threshold_) ;
+    getParam("laser_max_range", laser_max_range_);
     return true;
   }
 
@@ -75,9 +78,11 @@ public:
          i++) // Need to check ever reading in the current scan
     {
       {
-      if (filtered_scan.ranges[i] <= lower_threshold_ || filtered_scan.ranges[i] >= upper_threshold_)
+      //if (filtered_scan.ranges[i] <= lower_threshold_ || filtered_scan.ranges[i] >= upper_threshold_)
+      if (filtered_scan.ranges[i] >= 4*laser_max_range_)
         {
-          filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+          //filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+          filtered_scan.ranges[i] = laser_max_range_ + 0.1;
         }
       }
     }
